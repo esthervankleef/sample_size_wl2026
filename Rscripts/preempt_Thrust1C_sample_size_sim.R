@@ -8,15 +8,14 @@
 # PURPOSE
 # Evaluate candidate PRE-EMPT cohort sizes for Thrusts 1A, 1B and 1C.
 #
-# THRUST 1A: CTMC PARAMETER PRECISION
+# THRUST 1C: CTMC PARAMETER PRECISION
 # Household pARG carriage is modelled as a continuous-time process:
 #
-#   pARG-negative -> pARG-positive   (acquisition)
-#   pARG-positive -> pARG-negative   (clearance)
+# pARG-negative -> pARG-positive   (acquisition)
+# pARG-positive -> pARG-negative   (clearance)
 #
 # Acquisition hazard for a susceptible household member:
-#
-#   background_rate + n_positive_contacts * p2p_rate
+# background_rate + n_positive_contacts * p2p_rate
 #
 # Clearance occurs at rate gamma.
 #
@@ -25,30 +24,37 @@
 # and gamma (clearance). Precision is assessed using log-scale Wald 95%
 # CIs, with a design target of +/-30% for each parameter.
 #
-# THRUST 1B: INFORMATIVE INDEX YIELD
-# Thrust 1B is treated here as a cohort-yield calculation, NOT as a power
-# calculation for R0-within. An informative index is a participant who is
-# pARG-positive at the time of a captured priority-antibiotic exposure.
-# These participants are eligible for intensive sampling at days
-# 0, 3, 7, 14 and 28.
+# THRUST 1C: R0-BETWEEN PRECISION (within-household, ignoring between household transmission)
+# Household R0-between is derived from the household CTMC parameters as:
 #
-# The simulation estimates the expected index yield and probability of
-# obtaining >=40, 60, 80 or 100 informative episodes. These are design
-# sensitivity thresholds, not biological requirements for R0-within.
-#
-# THRUST 1C: R0-BETWEEN PRECISION
-# Household R0-between is approximated as:
-#
-#   R0-between = (hhsize - 1) * [1 - exp(-beta/gamma)]
+# R0-between = (hhsize - 1) * [1 - exp(-beta/gamma)]
 #
 # where 1/gamma is mean carriage duration and
 # 1-exp(-beta/gamma) is the probability of transmission to one susceptible
-# household contact during a carriage episode.
+# household contact during a carriage episode under this approximation.
 #
-# R0-between and its approximate 95% CI are calculated from each fitted
-# CTMC using the delta method on the log scale. The primary precision
-# target is +/-50%, with +/-25% considered as a stricter sensitivity.
+# R0-between and its approximate 95% CI are calculated from beta and gamma
+# estimated from routine household sampling, using the delta method on the
+# log scale. The primary precision target is a relative 95% CI half-width
+# <=50% of the point estimate, with <=25% considered as a stricter
+# sensitivity criterion.
 #
+# Separately, the simulation describes the expected yield of eligible
+# index-contact pairs following priority-antibiotic exposures and the
+# number of observed contact acquisitions at the next routine sample (See Thrust 1B).
+#
+# THRUST 1B: INFORMATIVE INDEX YIELD
+# Thrust 1B is treated here as a cohort-yield calculation, NOT as a power
+# calculation for R0-within. An informative index episode occurs when a
+# participant is pARG-positive at the time of a captured priority-
+# antibiotic exposure. Eligible index participants undergo intensive
+# sampling at days 0, 3, 7, 14 and 28.
+#
+# The simulation estimates the expected number of informative index
+# episodes and the probability of obtaining >=40, 60, 80 or 100 episodes.
+# These are design sensitivity thresholds, not biological requirements
+# for R0-within.
+
 # IMPORTANT
 # This is a design-stage simulation, not the final PRE-EMPT analysis.
 # Results are conditional on the assumed prevalence, acquisition,
@@ -1449,5 +1455,5 @@ write_xlsx(
     Assumptions=assumptions,
     Results=results
   ),
-  "./Output/PREEMPT_sample_size_results_hh7.xlsx"
+  "./Output/PREEMPT_sample_size_results.xlsx"
 )
